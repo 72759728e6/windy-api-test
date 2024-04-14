@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <form id="locationForm">
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude">
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude">
+        <button type="submit">Get Weather</button>
+    </form>
+    <div id="weatherInfo"></div>
+
+    <script>
+        // Function to submit the form with predefined latitude and longitude
+        async function submitForm(latitude, longitude) {
+            const apiKey = 'KofcVML5TNau4Gq48Eb6oQevmvbOeE16'; // Replace 'YOUR_API_KEY' with your actual API key
+            const apiUrl = 'https://api.windy.com/api/point-forecast/v2';
+
+            // Create request body
+            const requestBody = {
+                lat: parseFloat(latitude),
+                lon: parseFloat(longitude),
+                model: 'gfs',
+                parameters: ['wind', 'dewpoint', 'rh', 'pressure'],
+                levels: ['surface', '800h', '300h'],
+                key: apiKey
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                const data = await response.json();
+                console.log(data); // You can handle the data as per your requirement
+                document.getElementById('weatherInfo').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Define an array of latitude and longitude pairs
+        const locations = [
+            { latitude: '39', longitude: '30' },
+            // Add more latitude and longitude pairs here
+        ];
+
+        // Iterate through the locations array and submit the form for each pair
+        locations.forEach(({ latitude, longitude }) => {
+            submitForm(latitude, longitude);
+        });
+    </script>
+</body>
+</html>
