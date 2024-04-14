@@ -17,7 +17,7 @@ app.get('/weather', async (req, res) => {
     const lat = req.query.lat;
     const lon = req.query.lon;
     const apiKey = 'YOUR_API_KEY';
-    const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${hUp6XnjoQEfBX0teyVTSwnPy6qEgJzLP}&q=${lat},${lon}`;
+    const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${KofcVML5TNau4Gq48Eb6oQevmvbOeE16}&q=${lat},${lon}`;
 
     try {
         const response = await fetch(apiUrl);
