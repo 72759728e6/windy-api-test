@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windy API Polling</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #weather-info {
+            margin-top: 20px;
+        }
+
+        #weather-info img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Information</h1>
+        <div id="weather-info">
+            <!-- Weather information will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to make AJAX request to Windy API
+        const API_KEY = 'hUp6XnjoQEfBX0teyVTSwnPy6qEgJzLP';
+        const API_URL = `https://api.windy.com/api/weather/v1/?key=${API_KEY}&lat=35&lon=139&model=gfs&parameters=wind`;
+
+        // Function to fetch weather data from the API
+        const fetchWeatherData = () => {
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log the response data
+                    displayWeatherInfo(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                });
+        };
+
+        // Function to display weather information on the webpage
+        const displayWeatherInfo = (data) => {
+            const weatherInfoDiv = document.getElementById('weather-info');
+            weatherInfoDiv.innerHTML = ''; // Clear previous content
+
+            // Example: Display wind speed and direction
+            const windSpeed = data?.wind?.speed?.surface?.values[0]?.value;
+            const windDirection = data?.wind?.direction?.surface?.values[0]?.value;
+
+            const weatherText = document.createElement('p');
+            weatherText.textContent = `Wind Speed: ${windSpeed} m/s, Wind Direction: ${windDirection}°`;
+            weatherInfoDiv.appendChild(weatherText);
+        };
+
+        // Fetch weather data when the page loads
+        window.onload = fetchWeatherData;
+    </script>
+</body>
+</html>
