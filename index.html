@@ -3,76 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windy API Polling</title>
-    <style>
-        /* Add your CSS styles here */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #weather-info {
-            margin-top: 20px;
-        }
-
-        #weather-info img {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
+    <title>Weather App</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Weather Information</h1>
-        <div id="weather-info">
-            <!-- Weather information will be displayed here -->
-        </div>
-    </div>
+    <h1>Weather App</h1>
+    <form id="locationForm">
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude">
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude">
+        <button type="submit">Get Weather</button>
+    </form>
+    <div id="weatherInfo"></div>
 
     <script>
-        // JavaScript to make AJAX request to Windy API
-        const API_KEY = 'hUp6XnjoQEfBX0teyVTSwnPy6qEgJzLP';
-        const API_URL = `https://api.windy.com/api/weather/v1/?key=${API_KEY}&lat=35&lon=139&model=gfs&parameters=wind`;
+        document.getElementById('locationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            const apiKey = 'hUp6XnjoQEfBX0teyVTSwnPy6qEgJzLP'; // Replace 'YOUR_API_KEY' with your actual API key
+            const apiUrl = `https://api.windy.com/api/weather/v2.5/forecast?lat=${latitude}&lon=${longitude}&key=${apiKey}`;
 
-        // Function to fetch weather data from the API
-        const fetchWeatherData = () => {
-            fetch(API_URL)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data); // Log the response data
-                    displayWeatherInfo(data);
-                })
-                .catch(error => {
-                    console.error('Error fetching weather data:', error);
-                });
-        };
-
-        // Function to display weather information on the webpage
-        const displayWeatherInfo = (data) => {
-            const weatherInfoDiv = document.getElementById('weather-info');
-            weatherInfoDiv.innerHTML = ''; // Clear previous content
-
-            // Example: Display wind speed and direction
-            const windSpeed = data?.wind?.speed?.surface?.values[0]?.value;
-            const windDirection = data?.wind?.direction?.surface?.values[0]?.value;
-
-            const weatherText = document.createElement('p');
-            weatherText.textContent = `Wind Speed: ${windSpeed} m/s, Wind Direction: ${windDirection}°`;
-            weatherInfoDiv.appendChild(weatherText);
-        };
-
-        // Fetch weather data when the page loads
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                console.log(data); // You can handle the data as per your requirement
+                document.getElementById('weatherInfo').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    </script>
+</body>
+</html>
         window.onload = fetchWeatherData;
     </script>
 </body>
