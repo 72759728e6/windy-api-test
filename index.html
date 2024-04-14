@@ -22,10 +22,27 @@
             const latitude = document.getElementById('latitude').value;
             const longitude = document.getElementById('longitude').value;
             const apiKey = 'hUp6XnjoQEfBX0teyVTSwnPy6qEgJzLP'; // Replace 'YOUR_API_KEY' with your actual API key
-            const apiUrl = `https://api.windy.com/api/weather/v2.5/forecast?lat=${latitude}&lon=${longitude}&key=${apiKey}`;
+            const apiUrl = 'https://api.windy.com/api/point-forecast/v2';
+
+            // Create request body
+            const requestBody = {
+                lat: parseFloat(latitude),
+                lon: parseFloat(longitude),
+                model: 'gfs',
+                parameters: ['wind', 'dewpoint', 'rh', 'pressure'],
+                levels: ['surface', '800h', '300h'],
+                key: apiKey
+            };
 
             try {
-                const response = await fetch(apiUrl);
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
                 const data = await response.json();
                 console.log(data); // You can handle the data as per your requirement
                 document.getElementById('weatherInfo').innerText = JSON.stringify(data, null, 2);
@@ -33,10 +50,6 @@
                 console.error('Error fetching data:', error);
             }
         });
-    </script>
-</body>
-</html>
-        window.onload = fetchWeatherData;
     </script>
 </body>
 </html>
